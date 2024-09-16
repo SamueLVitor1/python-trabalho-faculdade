@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalhes da Tarefa</title>
+</head>
+<body>
+    <h1>{{ task.title }}</h1>
+    <p><strong>Descrição:</strong> {{ task.description }}</p>
+    <p><strong>Prioridade:</strong> {{ task.get_priority_display }}</p>
+    <p><strong>Data de Criação:</strong> {{ task.created_at }}</p>
+    <p><strong>Data de Vencimento:</strong> {{ task.due_date }}</p>
+    <a href="{% url 'task-list' %}">Voltar para a lista de tarefas</a>
+</body>
+</html>

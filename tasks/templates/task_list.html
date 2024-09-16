@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Tarefas</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <nav>
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'task-list' %}">Tarefas</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}">Logout</a>
+        {% else %}
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'register' %}">Registrar</a>
+        {% endif %}
+    </nav>
+
+    <h1>Lista de Tarefas</h1>
+    
+    <a href="{% url 'task-create' %}">Adicionar Nova Tarefa</a>
+
+    <!-- Campo de busca -->
+    <form method="GET" action="{% url 'task-list' %}">
+        <input type="text" name="q" placeholder="Buscar tarefas..." value="{{ request.GET.q }}">
+        <button type="submit">Buscar</button>
+    </form>
+
+    <!-- Notificação de tarefas próximas do vencimento -->
+    {% if upcoming_tasks %}
+        <div class="notification">
+            <h2>Tarefas Próximas do Vencimento:</h2>
+            <ul>
+                {% for task in upcoming_tasks %}
+                    <li>{{ task.title }} - Vence em {{ task.due_date|date:"d/m/Y" }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <!-- Lista de tarefas -->
+    <ul>
+        {% for task in tasks %}
+            <li>
+                <p>{{ task.title }}</p> 
+                - {{ task.get_priority_display }} - {{ task.category }}  
+                <a href="{% url 'task-update' task.pk %}">Editar</a> | 
+                <a href="{% url 'task-delete' task.pk %}">Excluir</a>
+                <a href="{% url 'task-detail' task.pk %}">Detalhes</a>
+            </li>
+        {% empty %}
+            <li>Sem tarefas cadastradas.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
